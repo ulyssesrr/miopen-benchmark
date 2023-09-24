@@ -2,7 +2,7 @@
 #define MY_MIOPEN_HPP
 
 #include <miopen/miopen.h>
-#include <hipblas.h>
+#include <hipblas/hipblas.h>
 //#include <gperftools/profiler.h>
 
 #include <iostream>
@@ -12,6 +12,7 @@
 #include <vector>
 #include <algorithm>
 #include <dirent.h>
+#include <stdexcept>
 
 //#define WITH_CL
 
@@ -76,7 +77,7 @@ void device_init() {
     hipError_t hip_error  = cmd;\
     if (hip_error != hipSuccess) { \
         fprintf(stderr, "error: '%s'(%d) at %s:%d\n", hipGetErrorString(hip_error), hip_error,__FILE__, __LINE__); \
-        exit(EXIT_FAILURE);\
+        throw std::runtime_error("MIOPEN Error");\
     }\
 }
 
@@ -327,7 +328,7 @@ const char* mio_err[] = {
     miopenStatus_t miostat = cmd;\
     if (miostat != miopenStatusSuccess) { \
         fprintf(stderr, "error: '%s'(%d) at %s:%d\n", mio_err[(int)miostat], miostat,__FILE__, __LINE__); \
-        exit(EXIT_FAILURE);\
+        throw std::runtime_error("MIOPEN Error");\
     }\
 }
 

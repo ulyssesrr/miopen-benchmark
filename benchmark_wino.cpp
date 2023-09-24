@@ -4,6 +4,7 @@
 #include "layers.hpp"
 #include "multi_layers.hpp"
 
+#include <map>
 #include <cstdlib>
 
 std::map<std::string, ConvLayerDesc> get_layers(){

@@ -214,7 +214,7 @@ void add_inplace(Tensor& x, const Tensor& y) {
 }
 */
 
-__global__ void addinplace_kernel(hipLaunchParm lp, float* x, const float* y, size_t N) {
+__global__ void addinplace_kernel(float* x, const float* y, size_t N) {
     size_t offset = hipBlockIdx_x * hipBlockDim_x + hipThreadIdx_x;
     size_t stride = hipBlockDim_x * hipGridDim_x;
 
@@ -227,7 +227,7 @@ void add_inplace(Tensor& x, const Tensor& y) {
     unsigned int blocks = 512;
     unsigned int threadsPerBlock = 256;
     assert(x.data_size == y.data_size);
-    hipLaunchKernel(addinplace_kernel, dim3(blocks), dim3(threadsPerBlock), 0, 0, (float*)x.data, (float*)y.data, x.data_size/4);
+    hipLaunchKernelGGL(addinplace_kernel, dim3(blocks), dim3(threadsPerBlock), 0, 0, (float*)x.data, (float*)y.data, x.data_size/4);
 }
 
 struct ShortCutAdd : public Function {

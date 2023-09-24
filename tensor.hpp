@@ -93,13 +93,13 @@ struct TensorDesc : public Dim {
     }
 
     TensorDesc(int n, int c, int h, int w) : Dim(n,c,h,w) {
-        CHECK_MIO(miopenCreateTensorDescriptor(&desc));
-        CHECK_MIO(miopenSet4dTensorDescriptor(desc, miopenFloat, n, c, h, w));
+        if (n > 0 && c > 0 && h > 0 && w > 0) {
+            CHECK_MIO(miopenCreateTensorDescriptor(&desc));
+            CHECK_MIO(miopenSet4dTensorDescriptor(desc, miopenFloat, n, c, h, w));
+        }
     }
-    TensorDesc(const Dim& dims) : Dim(dims) {
-        CHECK_MIO(miopenCreateTensorDescriptor(&desc));
-        CHECK_MIO(miopenSet4dTensorDescriptor(desc, miopenFloat, n, c, h, w));
-    }
+
+    TensorDesc(const Dim& dims) : TensorDesc(dims.n, dims.c, dims.h, dims.w) {}
 
     TensorDesc(const TensorDesc& o) : TensorDesc(o.n, o.c, o.h, o.w) {}
 
